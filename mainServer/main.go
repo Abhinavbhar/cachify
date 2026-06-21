@@ -7,7 +7,6 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("A request came")
 		fmt.Fprintln(w, "Hello World!")
 	})
 	fmt.Println("server is running on 8080")

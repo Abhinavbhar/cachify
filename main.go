@@ -1,31 +1,27 @@
 package main
 
 import (
-	"bufio"
+	"cachify/handler"
 	"fmt"
 	"net"
 )
 
 func main() {
-	originServer := "127.0.0.1:8080"
 	fmt.Println("Server started")
 
 	listener, err := net.Listen("tcp", "127.0.0.1:3000")
 	if err != nil {
 		fmt.Println("cannot open the port at 3000")
+		listener.Close()
 	}
-	CLientconn, err := listener.Accept()
+	for {
+		Clientconn, err := listener.Accept()
+		if err != nil {
+			fmt.Println("could not accept the request")
+			Clientconn.Close()
 
-	reader := bufio.NewReader(CLientconn)
+		}
+		go handler.HandleReq(Clientconn)
 
-	buffer := make([]byte, 4000)
-
-	reader.Read(buffer)
-	// connecting with the origin server
-
-	MainConn, err := net.Dial("tcp", originServer)
-	MainConn.Write(buffer)
-	backendToProxy := make([]byte, 4000)
-	MainConn.Read(backendToProxy)
-	CLientconn.Write(backendToProxy)
+	}
 }
